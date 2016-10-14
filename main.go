@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
 
 	"server/g"
@@ -22,9 +23,15 @@ func main() {
 	g.Database = db
 
 	route := mux.NewRouter()
+
 	route.HandleFunc("/page/{id:[0-9a-zA\\-]+}", handlers.ServePageByGUID)
+	route.HandleFunc("/", handlers.RedirIndex)
+	route.HandleFunc("/pages", handlers.ServePages)
 	http.Handle("/", route)
 
-	http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
 
 }

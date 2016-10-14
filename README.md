@@ -23,6 +23,11 @@
 * database migration
 
     [mattes/migrate](https://github.com/mattes/migrate)
+    
+## Issues
+---
+
+* vscode on ubuntu can not stop delve. If we restart the debuger, we would get the error `listen tcp :8080: bind: address already in use`. we could use `killall -9 debug` to kill the debuger
 
 ## Conversion 
 ---
