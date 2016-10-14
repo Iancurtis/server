@@ -1,0 +1,1 @@
+INSERT INTO `pages` VALUES (1,'insert-a-new-blog','Insert a new blog','I hope the migrate tools would work <i>well</i>.','2016-10-14 17:28:44'),(2,'hello-world','Hello world','I\'m so glad you found this page! It\'s been sitting patiently on the Internet for some time, just waiting for a visitor.','2016-10-13 07:46:43');
