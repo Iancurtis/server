@@ -1,17 +1,17 @@
-# Write a webapp.
+# a webapp.
 
-## 约定
+## Conversion 
 
-> 所有的全局变量放到 `package g` 中
+> put all the global variables into `package g`
 
 
-## 选择的第三方库
+## 3rd party frameworks
 
-> 配置文件选择ini
+> ini
 
 `github.com/go-ini/ini`
 
-> 单元测试
+> unit test
 
 `github.com/smartystreets/goconvey`
 

@@ -1,10 +1,10 @@
-## 忽略没有扩展名的文件
+## ignore all the files with no extension name 
 
-#first step: 忽略所有文件
+#first step: ignore all files
 *
-#second step: 不忽略文件夹
+#second step: except file folders
 !/**/
-#third step: 不忽略有后缀名的文件
+#third step: except files with extension name
 !*.*
-#
+##
 .vscode/
