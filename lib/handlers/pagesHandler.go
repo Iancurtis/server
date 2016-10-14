@@ -20,6 +20,16 @@ type Page struct {
 	Date       string
 }
 
+// TruncatedContent get a shortened content
+func (p *Page) TruncatedContent() template.HTML {
+	for i := range p.Content {
+		if i >= 10 {
+			return p.Content[:i] + "..."
+		}
+	}
+	return p.Content
+}
+
 func servePage(w http.ResponseWriter, r *http.Request, field string) {
 	vars := mux.Vars(r)
 	filter := vars["id"]
