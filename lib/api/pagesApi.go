@@ -18,7 +18,7 @@ func Pages(w http.ResponseWriter, r *http.Request) {
 	pageGUID := vars["guid"]
 	fmt.Println(pageGUID)
 	thisPage := handlers.Page{}
-	err := g.Database.QueryRow("select page_title, page_content, page_date from pages where page_guid=?", pageGUID).Scan(&thisPage.Title, &thisPage.RawContent, &thisPage.Date)
+	err := g.Database.QueryRow("select id, page_title, page_content, page_date from pages where page_guid=?", pageGUID).Scan(&thisPage.ID, &thisPage.Title, &thisPage.RawContent, &thisPage.Date)
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)

@@ -27,6 +27,8 @@ func main() {
 	route.HandleFunc("/api/pages", api.Pages)
 	route.HandleFunc("/api/pages/{guid:[0-9a-zA-Z-]+}", api.Pages)
 
+	route.HandleFunc("/api/comments", api.CommentPut).Methods("post")
+
 	route.HandleFunc("/pages/{id:[0-9a-zA\\-]+}", handlers.ServePageByGUID)
 	route.HandleFunc("/", handlers.RedirIndex)
 	route.HandleFunc("/pages", handlers.ServePages)

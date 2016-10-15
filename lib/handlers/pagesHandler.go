@@ -13,6 +13,7 @@ import (
 
 // Page struct of blog
 type Page struct {
+	ID         string
 	GUID       string
 	Title      string
 	RawContent string
@@ -34,7 +35,7 @@ func servePage(w http.ResponseWriter, r *http.Request, field string) {
 	vars := mux.Vars(r)
 	filter := vars["id"]
 	thisPage := Page{}
-	err := g.Database.QueryRow("select page_title, page_content, page_date from pages where "+field+"=?", filter).Scan(&thisPage.Title, &thisPage.RawContent, &thisPage.Date)
+	err := g.Database.QueryRow("select id, page_title, page_content, page_date from pages where "+field+"=?", filter).Scan(&thisPage.ID, &thisPage.Title, &thisPage.RawContent, &thisPage.Date)
 	thisPage.Content = template.HTML(thisPage.RawContent)
 	if err != nil {
 		log.Println("Couldn't get page :", filter)
