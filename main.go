@@ -2,11 +2,11 @@ package main
 
 import (
 	"database/sql"
-	"log"
 	"net/http"
 
 	"server/g"
 
+	"server/lib/api"
 	"server/lib/handlers"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -23,15 +23,26 @@ func main() {
 	g.Database = db
 
 	route := mux.NewRouter()
+	//API
+	route.HandleFunc("/api/pages", api.Pages)
+	route.HandleFunc("/api/pages/{guid:[0-9a-zA-Z-]+}", api.Pages)
 
-	route.HandleFunc("/page/{id:[0-9a-zA\\-]+}", handlers.ServePageByGUID)
+	route.HandleFunc("/pages/{id:[0-9a-zA\\-]+}", handlers.ServePageByGUID)
 	route.HandleFunc("/", handlers.RedirIndex)
 	route.HandleFunc("/pages", handlers.ServePages)
 	http.Handle("/", route)
 
-	err = http.ListenAndServe(":8080", nil)
-	if err != nil {
-		log.Fatalln(err.Error())
-	}
-
+	go func() {
+		err = http.ListenAndServeTLS("127.0.0.1:8080", "certificate.pem", "key.pem", nil)
+		if err != nil {
+			panic(err.Error())
+		}
+	}()
+	go func() {
+		err = http.ListenAndServe("127.0.0.1:8090", handlers.RedirectTo("https://127.0.0.1:8080"))
+		if err != nil {
+			panic(err.Error())
+		}
+	}()
+	select {}
 }
