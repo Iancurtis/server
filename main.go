@@ -33,6 +33,8 @@ func main() {
 	route.HandleFunc("/", handlers.RedirIndex)
 	route.HandleFunc("/pages", handlers.ServePages)
 	http.Handle("/", route)
+	//静态文件系统
+	http.Handle("/assets/", http.FileServer(http.Dir("./")))
 
 	go func() {
 		err = http.ListenAndServeTLS("127.0.0.1:8080", "certificate.pem", "key.pem", nil)

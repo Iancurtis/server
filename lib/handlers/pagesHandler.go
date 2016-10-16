@@ -8,33 +8,15 @@ import (
 
 	"server/g"
 
+	"server/lib/model"
+
 	"github.com/gorilla/mux"
 )
-
-// Page struct of blog
-type Page struct {
-	ID         string
-	GUID       string
-	Title      string
-	RawContent string
-	Content    template.HTML
-	Date       string
-}
-
-// TruncatedContent get a shortened content
-func (p *Page) TruncatedContent() template.HTML {
-	for i := range p.Content {
-		if i >= 10 {
-			return p.Content[:i] + "..."
-		}
-	}
-	return p.Content
-}
 
 func servePage(w http.ResponseWriter, r *http.Request, field string) {
 	vars := mux.Vars(r)
 	filter := vars["id"]
-	thisPage := Page{}
+	thisPage := model.Page{}
 	err := g.Database.QueryRow("select id, page_title, page_content, page_date from pages where "+field+"=?", filter).Scan(&thisPage.ID, &thisPage.Title, &thisPage.RawContent, &thisPage.Date)
 	thisPage.Content = template.HTML(thisPage.RawContent)
 	if err != nil {
@@ -42,6 +24,10 @@ func servePage(w http.ResponseWriter, r *http.Request, field string) {
 		// log.Println(err.Error())
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
+	}
+	err = thisPage.GetComments()
+	if err != nil {
+		log.Println("GetComments: ", err.Error())
 	}
 	// html := `<head><title>` + thisPage.title + `</title></head><body><h1>` + thisPage.title + `</h1><div>` + thisPage.content + `</div>`
 	// fmt.Fprintln(w, html)
@@ -51,6 +37,7 @@ func servePage(w http.ResponseWriter, r *http.Request, field string) {
 	} else {
 		log.Println("ok")
 	}
+
 	t.Execute(w, thisPage)
 }
 
@@ -67,15 +54,15 @@ func ServePageByGUID(w http.ResponseWriter, r *http.Request) {
 // ServePages handle the pages request
 // show the pages list
 func ServePages(w http.ResponseWriter, r *http.Request) {
-	pages := []Page{}
+	pages := []model.Page{}
 	rows, err := g.Database.Query("select page_guid, page_title, page_content, page_date from pages order by ? desc", "page_date")
 	if err != nil {
 		fmt.Fprintln(w, err.Error())
 		return
 	}
 	defer rows.Close()
+	thisPage := model.Page{}
 	for rows.Next() {
-		thisPage := Page{}
 		rows.Scan(&thisPage.GUID, &thisPage.Title, &thisPage.RawContent, &thisPage.Date)
 		thisPage.Content = template.HTML(thisPage.RawContent)
 		pages = append(pages, thisPage)

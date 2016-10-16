@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"server/g"
-	"server/lib/handlers"
+	"server/lib/model"
 
 	"github.com/gorilla/mux"
 )
@@ -17,7 +17,7 @@ func Pages(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	pageGUID := vars["guid"]
 	fmt.Println(pageGUID)
-	thisPage := handlers.Page{}
+	thisPage := model.Page{}
 	err := g.Database.QueryRow("select id, page_title, page_content, page_date from pages where page_guid=?", pageGUID).Scan(&thisPage.ID, &thisPage.Title, &thisPage.RawContent, &thisPage.Date)
 	if err != nil {
 		log.Println(err.Error())
